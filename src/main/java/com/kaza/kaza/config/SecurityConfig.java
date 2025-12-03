@@ -18,11 +18,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // New lambda-based approach
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // 2. Allow public access
-                        .anyRequest().authenticated() // 3. Require authentication for everything else
-                );
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**"
+                        ).permitAll()
+                        .anyRequest().permitAll() // open everything for now
+                )
+                .httpBasic(httpBasic -> {})
+                .formLogin(form -> form.disable());
+
         return http.build();
     }
 }

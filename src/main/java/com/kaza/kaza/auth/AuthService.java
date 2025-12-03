@@ -23,7 +23,10 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
         // Check if email exists
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered");
+            return new AuthResponse(
+                    false,
+                    "Email does not exist"
+            );
         }
 
         // Create new user
@@ -39,10 +42,8 @@ public class AuthService {
 
         // Return response
         return new AuthResponse(
-                savedUser.getEmail(),
-                savedUser.getFullName(),
-                savedUser.getRole(),
-                "Registration successful"
+                true,
+                "User Registered Successfully"
         );
     }
 
@@ -53,14 +54,15 @@ public class AuthService {
 
         // Check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            return new AuthResponse(
+                    false,
+                    "Invalid Credentials"
+            );
         }
 
         // Return response
         return new AuthResponse(
-                user.getEmail(),
-                user.getFullName(),
-                user.getRole(),
+                true,
                 "Login successful"
         );
     }

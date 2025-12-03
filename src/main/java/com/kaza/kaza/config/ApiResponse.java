@@ -1,13 +1,14 @@
-package com.kaza.kaza.dto;
+package com.kaza.kaza.config;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    private Boolean success;
+@NoArgsConstructor
+public class ApiResponse<T> {
+    private boolean success;
     private String message;
+    private T data;
 }

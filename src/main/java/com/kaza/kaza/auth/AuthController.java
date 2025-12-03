@@ -1,5 +1,6 @@
 package com.kaza.kaza.auth;
 
+import com.kaza.kaza.config.ApiResponse;
 import com.kaza.kaza.dto.AuthResponse;
 import com.kaza.kaza.dto.LoginRequest;
 import com.kaza.kaza.dto.RegisterRequest;
@@ -19,14 +20,24 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<?>> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = authService.register(request);
-        return ResponseEntity.ok(response);
+
+        if(!response.getSuccess()){
+            return ResponseEntity.ok(new ApiResponse<>(false, response.getMessage(), null ));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, response.getMessage(), null ));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<?>>login(@RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+//        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
+        if(!response.getSuccess()){
+            return ResponseEntity.ok(new ApiResponse<>(false, response.getMessage(), null ));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, response.getMessage(), null ));
     }
 }
